@@ -8,10 +8,15 @@ on:
 jobs:
   terraform:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Set up Google Cloud authentication
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: '${{ secrets.TERRAFORM }}'
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2
@@ -20,15 +25,9 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.TERRAFORM }}
 
       - name: Terraform Plan
         run: terraform plan
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.TERRAFORM }}
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.TERRAFORM }}
