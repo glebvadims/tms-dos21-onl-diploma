@@ -2,7 +2,7 @@ name: Setup Docker on VM
 
 on:
   workflow_run:
-    workflows: ["Terraform Workflow"] 
+    workflows: ["Terraform"]
     types:
       - completed
 
@@ -13,11 +13,10 @@ jobs:
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v3
-      
+
     - name: Install Docker on VM
       run: |
         ssh -o StrictHostKeyChecking=no -i <(echo "${{ secrets.SSH_KEY }}") ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-         
         sudo apt-get update
         sudo apt-get install ca-certificates curl
         sudo install -m 0755 -d /etc/apt/keyrings
@@ -30,6 +29,7 @@ jobs:
         sudo apt-get update
         sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
         sudo docker run --rm hello-world
-        sudo docke stop hello-world
+        sudo docker stop hello-world
         EOF
+  
         
