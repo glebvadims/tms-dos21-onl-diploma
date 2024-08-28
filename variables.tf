@@ -21,3 +21,8 @@ variable "ip_static" {
   type        = string
   default     = "34.30.80.224"
 }
+variable "ssh_public_key" {
+  description = "Публичный SSH-ключ для доступа к виртуальной машине"
+  type        = string
+
+}
