@@ -5,18 +5,20 @@ provider "google" {
 }
 
 resource "google_compute_instance" "default" {
-  name         = "terraform-vm"
+  name         = "dos21-onl"
   machine_type = "e2-medium"
 
   boot_disk {
     initialize_params {
-      image = "debian-cloud/debian-11"
+      image = "debian-cloud/debian-12"
     }
   }
 
   network_interface {
     network = "default"
-    access_config {}
+    access_config {
+      nat_ip = var.ip_static
+    }
   }
 }
 

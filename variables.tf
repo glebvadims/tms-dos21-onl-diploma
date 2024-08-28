@@ -15,3 +15,9 @@ variable "zone" {
   description = "The GCP zone."
   default     = "us-central1-a"
 }
+
+variable "ip_static" {
+  description = "Имя статического IP-адреса"
+  type        = string
+  default     = "34.30.80.224"
+}
