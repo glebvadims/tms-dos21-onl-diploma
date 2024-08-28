@@ -18,7 +18,6 @@ resource "google_compute_instance" "default" {
     network = "default"
     access_config {
       nat_ip = var.ip_static
-      network_tier = "STANDARD"
     }
   }
   metadata = {
