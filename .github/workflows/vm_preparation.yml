@@ -1,4 +1,4 @@
-name: Setup Docker on VM
+name: VM preparation
 
 on:
   workflow_run:
@@ -19,16 +19,22 @@ jobs:
         mkdir -p ~/.ssh
         echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
+        
+    - name: Install Git on VM
+      run: |
+        ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
 
+        # Проверка наличия git
+        if ! command -v git &> /dev/null
+        then
+            echo "git could not be found, installing it now."
+            sudo apt-get update && sudo apt-get install -y git
+        fi
+        EOF
+        
     - name: Install Docker on VM
       run: |
         ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-        # Проверка наличия sudo
-        if ! command -v sudo &> /dev/null
-        then
-            echo "sudo could not be found, please install it or use a user with sufficient privileges."
-            exit 1
-        fi
 
         # Проверка наличия curl
         if ! command -v curl &> /dev/null
