@@ -14,9 +14,15 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v3
 
+    - name: Setup SSH key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+
     - name: Install Docker on VM
       run: |
-        ssh -o StrictHostKeyChecking=no -i <(echo "${{ secrets.SSH_KEY }}") ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+        ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
         # Проверка наличия sudo
         if ! command -v sudo &> /dev/null
         then
@@ -47,6 +53,3 @@ jobs:
         # Запуск тестового контейнера
         sudo docker run --rm hello-world
         EOF
-            
-  
-        
