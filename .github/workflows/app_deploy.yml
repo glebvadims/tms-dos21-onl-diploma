@@ -24,11 +24,24 @@ jobs:
       run: |
         ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Cache Docker layers
+      uses: actions/cache@v3
+      with:
+        path: /tmp/.buildx-cache
+        key: ${{ runner.os }}-buildx-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-buildx-
+
     - name: Deploy to remote server
       run: |
-        ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
+        ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
           git clone https://github.com/glebvadims/tms-dos21-onl-diploma.git
           cd ~/tms-dos21-onl-diploma
+          docker buildx create --use
+          docker buildx build --push --tag my-image .
           sudo docker compose up -d && docker ps
         EOF
 
@@ -43,7 +56,7 @@ jobs:
         subject: "Deployment Succeeded"
         body: "The deployment to the remote server was successful."
         to: gleb.vadim.s@gmail.com
-        from: githubactions0@gmail.com
+        from: ${{ secrets.EMAIL_USERNAME }}
 
     - name: Send failure email
       if: failure()
@@ -56,4 +69,4 @@ jobs:
         subject: "Deployment Failed"
         body: "The deployment to the remote server has failed."
         to: gleb.vadim.s@gmail.com
-        from: githubactions0@gmail.com
+        from: ${{ secrets.EMAIL_USERNAME }}

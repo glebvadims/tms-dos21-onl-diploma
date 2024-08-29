@@ -29,5 +29,9 @@ jobs:
       - name: Terraform Plan
         run: terraform plan
 
+      - name: Destroy existing resources
+        if: success() && always()
+        run: terraform destroy -auto-approve
+
       - name: Terraform Apply
         run: terraform apply -auto-approve
