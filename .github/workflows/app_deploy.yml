@@ -39,6 +39,7 @@ jobs:
     - name: Deploy to remote server
       run: |
         ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
+          sudo chmod 666 /var/run/docker.sock
           git clone https://github.com/glebvadims/tms-dos21-onl-diploma.git
           cd ~/tms-dos21-onl-diploma
           docker buildx create --use
