@@ -21,10 +21,12 @@
       "adminUrl": "${GF_URL}",
       "baseUrl": "${GF_URL}",
       "redirectUris": [
+        "${GF_URL_EXT}/*",
         "${GF_URL}/*"
       ],
       "webOrigins": [
-        "${GF_URL}"
+        "${GF_URL_EXT}/*",
+        "${GF_URL}/*"
       ]
     }
   ],

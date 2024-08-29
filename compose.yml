@@ -42,6 +42,7 @@ services:
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
       GF_URL: ${GF_HOSTNAME}:${GF_SERVER_HTTP_PORT}
+      GF_URL_EXT: ${GF_HOSTNAME_EXT}
       GF_ADMIN_USERNAME: ${GF_ADMIN_USERNAME}
       GF_ADMIN_PASSWORD: ${GF_ADMIN_PASSWORD}
     ports:
@@ -86,9 +87,9 @@ services:
       GF_AUTH_GENERIC_OAUTH_CLIENT_ID: "grafana"
       GF_AUTH_GENERIC_OAUTH_EMAIL_ATTRIBUTE_NAME: "email:primary"
       GF_AUTH_GENERIC_OAUTH_SCOPES: "openid profile email"
-      GF_AUTH_GENERIC_OAUTH_AUTH_URL: ${KC_HOSTNAME}:${KC_PORT}/realms/${KC_REALM_NAME}/protocol/openid-connect/auth
+      GF_AUTH_GENERIC_OAUTH_AUTH_URL: ${KC_HOSTNAME_EXT}/realms/${KC_REALM_NAME}/protocol/openid-connect/auth
       GF_AUTH_GENERIC_OAUTH_TOKEN_URL: http://keycloak:${KC_PORT}/realms/${KC_REALM_NAME}/protocol/openid-connect/token
-      GF_AUTH_GENERIC_OAUTH_API_URL: ${KC_HOSTNAME}:${KC_PORT}/realms/${KC_REALM_NAME}/protocol/openid-connect/userinfo
+      GF_AUTH_GENERIC_OAUTH_API_URL: ${KC_HOSTNAME_EXT}/realms/${KC_REALM_NAME}/protocol/openid-connect/userinfo
     volumes:
       - ./grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
       - ./grafana/datasources:/etc/grafana/provisioning/datasources:ro
