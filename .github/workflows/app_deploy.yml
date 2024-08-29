@@ -1,0 +1,55 @@
+name: APP Deploy
+
+on:
+  workflow_run:
+    workflows: ["VM preparation"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up SSH key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+
+    - name: Deploy to remote server
+      run: |
+        ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
+          git clone https://github.com/glebvadims/tms-dos21-onl-diploma.git
+          cd ~/tms-dos21-onl-diploma
+          sudo docker compose up -d && docker ps
+        EOF
+
+    - name: Send success email
+      if: success()
+      uses: dawidd6/action-send-mail@v3
+      with:
+        server_address: smtp.gmail.com
+        server_port: 465
+        username: ${{ secrets.EMAIL_USERNAME }}
+        password: ${{ secrets.EMAIL_PASSWORD }}
+        subject: "Deployment Succeeded"
+        body: "The deployment to the remote server was successful."
+        to: gleb.vadim.s@gmail.com
+        from: nightasura@gmail.com
+
+    - name: Send failure email
+      if: failure()
+      uses: dawidd6/action-send-mail@v3
+      with:
+        server_address: smtp.gmail.com
+        server_port: 465
+        username: ${{ secrets.EMAIL_USERNAME }}
+        password: ${{ secrets.EMAIL_PASSWORD }}
+        subject: "Deployment Failed"
+        body: "The deployment to the remote server has failed."
+        to: gleb.vadim.s@gmail.com
+        from: nightasura@gmail.com
