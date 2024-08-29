@@ -26,6 +26,18 @@ resource "google_compute_instance" "default" {
 
 }  
 
+resource "google_compute_firewall" "allow_http_https" {
+  name    = "allow-http-https-dos21"
+  network = "default"
+
+  allow {
+    protocol = "tcp"
+    ports    = ["80", "443"]
+  }
+
+  source_ranges = ["0.0.0.0/0"]
+}
+
 output "instance_ip" {
   value       = google_compute_instance.default.network_interface[0].access_config[0].nat_ip
   description = "The external IP address of the VM"
