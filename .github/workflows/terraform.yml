@@ -31,7 +31,6 @@ jobs:
         run: terraform plan
 
       - name: Destroy existing resources
-        if: success() && always()
         run: terraform destroy -auto-approve
 
       - name: Terraform Apply
