@@ -5,6 +5,7 @@ on:
     workflows: ["Terraform"]
     types:
       - completed
+  workflow_dispatch:
 
 jobs:
   setup-docker:

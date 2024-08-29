@@ -5,6 +5,7 @@ on:
     workflows: ["VM preparation"]
     types:
       - completed
+  workflow_dispatch:
 
 jobs:
   deploy:
